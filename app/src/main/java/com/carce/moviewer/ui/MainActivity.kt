@@ -1,4 +1,4 @@
-package com.carce.moviewer
+package com.carce.moviewer.ui
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -9,16 +9,23 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
+import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
+import com.carce.moviewer.R
 import com.carce.moviewer.databinding.ActivityMainBinding
+import com.carce.moviewer.viewModel.ListViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var listViewModel: ListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        listViewModel = ViewModelProvider(this).get()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -29,8 +36,8 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            listViewModel.getMovieList()
+            Snackbar.make(binding.root, listViewModel.wMessage.value.toString() + listViewModel, 2000).show()
         }
     }
 
