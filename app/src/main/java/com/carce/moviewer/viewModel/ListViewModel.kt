@@ -15,19 +15,18 @@ import kotlinx.coroutines.launch
 
 class ListViewModel(): ViewModel() {
 
-    val wMessage: MutableStateFlow<RequestState> = MutableStateFlow(RequestState.Empty)
+    val requestState: MutableStateFlow<RequestState> = MutableStateFlow(RequestState.Empty)
     private val movieRepository = MovieRepository()
 
-    @SuppressLint("LongLogTag")
     fun getMovieList() {
-
         viewModelScope.launch(Dispatchers.IO) {
+            requestState.value = RequestState.Loading
             movieRepository.getPopularMovieList()
                 .catch { e ->
-                    wMessage.value = RequestState.Failure(e)
-                    Log.e("THIS IS MY ERRORRRRRRRRRRRRR", e.message!!)
+                    requestState.value = RequestState.Failure(e)
+                    Log.e("THIS IS MY ERRORRRRRRR", e.message!!)
                 }.collect { data ->
-                    wMessage.value = RequestState.Success(data)
+                    requestState.value = RequestState.Success(data)
                 }
         }
     }
