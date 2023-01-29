@@ -23,11 +23,19 @@ class PopularMoviesAdapter(private var items: MutableList<Movie>): RecyclerView.
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val item = items[position]
-        Log.d("Position $position image:", item.image)
         Picasso.get().load("https://image.tmdb.org/t/p/w780${item.image}").into(holder.itemBinding.movieImage)
+        holder.itemBinding.movieImage.contentDescription = "poster for ${item.title}"
     }
 
     override fun getItemCount() = items.size
 
-    inner class MovieViewHolder(val itemBinding: MoviePosterBinding): RecyclerView.ViewHolder(itemBinding.root)
+    inner class MovieViewHolder(val itemBinding: MoviePosterBinding): RecyclerView.ViewHolder(itemBinding.root) {
+        init {
+            onItemClick?.let {
+                itemBinding.root.setOnClickListener {
+                    it(items[adapterPosition])
+                }
+            }
+        }
+    }
 }

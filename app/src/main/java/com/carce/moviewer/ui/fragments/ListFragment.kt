@@ -7,9 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.carce.moviewer.R
@@ -41,11 +46,12 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listViewModel = ViewModelProvider(this).get()
+        listViewModel = ViewModelProvider(this.activity as ViewModelStoreOwner).get()
+
         popularMoviesAdapter = PopularMoviesAdapter(mutableListOf())
         binding.rvMovies.adapter = popularMoviesAdapter
-        val manager = GridLayoutManager(this.context, 3, GridLayoutManager.VERTICAL, false)
-        binding.rvMovies.layoutManager = manager
+        binding.rvMovies.layoutManager = GridLayoutManager(this.context, 3, GridLayoutManager.VERTICAL, false)
+
         binding.swipeRefreshList.post {
             listViewModel.getMovieList()
         }
@@ -53,12 +59,9 @@ class ListFragment : Fragment() {
             listViewModel.getMovieList()
         }
         beginCollectingFromVM()
-        /*binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-        }*/
     }
-    private fun beginCollectingFromVM() {
 
+    private fun beginCollectingFromVM() {
         lifecycleScope.launchWhenCreated {
             listViewModel.requestState.collect {
                 when (it) {
@@ -77,6 +80,10 @@ class ListFragment : Fragment() {
                         binding.swipeRefreshList.isRefreshing = false
                         val movieList = it.data as List<Movie>
                         popularMoviesAdapter = PopularMoviesAdapter(movieList as MutableList<Movie>)
+                        popularMoviesAdapter.setItemClick { movie ->
+                            listViewModel.updateMovieToBeDetailed(movie)
+                            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundleOf("movieTitle" to movie.title))
+                        }
                         binding.rvMovies.adapter = popularMoviesAdapter
                         popularMoviesAdapter.notifyDataSetChanged()
                     }
@@ -86,9 +93,5 @@ class ListFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 }
