@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.carce.moviewer.model.Movie
 import com.carce.moviewer.networkService.RequestState
 import com.carce.moviewer.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 class ListViewModel(): ViewModel() {
 
     val requestState: MutableStateFlow<RequestState> = MutableStateFlow(RequestState.Empty)
+    val movieToBeDetailed: MutableStateFlow<Movie> = MutableStateFlow(Movie("","","","","",""))
     private val movieRepository = MovieRepository()
 
     fun getMovieList() {
@@ -28,6 +30,12 @@ class ListViewModel(): ViewModel() {
                 }.collect { data ->
                     requestState.value = RequestState.Success(data)
                 }
+        }
+    }
+
+    fun updateMovieToBeDetailed(movie:Movie) {
+        viewModelScope.launch(Dispatchers.IO) {
+            movieToBeDetailed.value = movie
         }
     }
 }

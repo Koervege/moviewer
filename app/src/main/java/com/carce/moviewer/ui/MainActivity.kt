@@ -1,17 +1,13 @@
 package com.carce.moviewer.ui
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
-import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import com.carce.moviewer.R
 import com.carce.moviewer.databinding.ActivityMainBinding
 import com.carce.moviewer.viewModel.ListViewModel
