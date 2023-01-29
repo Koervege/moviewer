@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.carce.moviewer.R
 import com.carce.moviewer.databinding.FragmentDetailBinding
+import com.carce.moviewer.networkService.ApiURL
 import com.carce.moviewer.viewModel.ListViewModel
 import com.squareup.picasso.Picasso
 
@@ -39,7 +40,7 @@ class DetailFragment : Fragment() {
 
         lifecycleScope.launchWhenCreated {
             listViewModel.movieToBeDetailed.collect {
-                Picasso.get().load("https://image.tmdb.org/t/p/w780${it.image}").into(binding.movieDetailPoster)
+                Picasso.get().load("${ApiURL.IMAGE_URL}${it.image}").into(binding.movieDetailPoster)
                 binding.movieDetailPoster.contentDescription = "poster for ${it.title}"
                 binding.movieDetailSummary.text = it.overview
             }

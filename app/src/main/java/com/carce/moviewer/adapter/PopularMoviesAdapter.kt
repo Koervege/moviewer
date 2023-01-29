@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.carce.moviewer.databinding.MoviePosterBinding
 import com.carce.moviewer.model.Movie
+import com.carce.moviewer.networkService.ApiURL
 import com.squareup.picasso.Picasso
 
 class PopularMoviesAdapter(private var items: MutableList<Movie>): RecyclerView.Adapter<PopularMoviesAdapter.MovieViewHolder>() {
@@ -23,7 +24,7 @@ class PopularMoviesAdapter(private var items: MutableList<Movie>): RecyclerView.
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val item = items[position]
-        Picasso.get().load("https://image.tmdb.org/t/p/w780${item.image}").into(holder.itemBinding.movieImage)
+        Picasso.get().load("${ApiURL.IMAGE_URL}${item.image}").into(holder.itemBinding.movieImage)
         holder.itemBinding.movieImage.contentDescription = "poster for ${item.title}"
     }
 
