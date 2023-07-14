@@ -1,5 +1,5 @@
 # moviewer
-App to browse popular movies on TMDb
+App to browse popular movies on [TMDb](https://www.themoviedb.org/)
 
 
 List:
